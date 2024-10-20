@@ -14,4 +14,6 @@ func Register(r *mux.Router, lg *logrus.Logger, db *sqlx.DB) {
 	apiRouter := r.PathPrefix("/api/v1").Subrouter()
 	apiRouter.Use(handler.MiddlewareLogger())
 	apiRouter.HandleFunc("/todo", handler.Create()).Methods(http.MethodPost)
+	apiRouter.HandleFunc("/todos", handler.GetAllTodos()).Methods(http.MethodGet)
+	apiRouter.HandleFunc("/todo/{id}", handler.FindById()).Methods(http.MethodGet)
 }

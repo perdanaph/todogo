@@ -17,6 +17,20 @@ func NewRepository(db *sqlx.DB) Repository {
 	return Repository{Db: db}
 }
 
+func (r Repository) GetAll(ctx context.Context) ([]model.ToDo, error) {
+	var todos []model.ToDo
+	query := `
+		SELECT id, name, description, status, created_on, updated_on, deleted_on 
+		FROM todos 
+		WHERE deleted_on IS NULL
+	`
+	err := r.Db.SelectContext(ctx, &todos, query)
+	if err != nil {
+		return nil, db.HandleError(err)
+	}
+	return todos, nil
+}
+
 func (r Repository) Find(ctx context.Context, id int) (model.ToDo, error) {
 	entity := model.ToDo{}
 	query := fmt.Sprintf(
