@@ -25,3 +25,20 @@ func (r Repository) Find(ctx context.Context, id int) (model.ToDo, error) {
 	err := r.Db.GetContext(ctx, &entity, query, id)
 	return entity, db.HandleError(err)
 }
+
+func (r Repository) Create(ctx context.Context, entity *model.ToDo) error {
+	query := `INSERT INTO todos (name, description, status, created_on, updated_on)
+                VALUES (:name, :description, :status, :created_on, :updated_on) RETURNING id;`
+	rows, err := r.Db.NamedQueryContext(ctx, query, entity)
+	if err != nil {
+		return db.HandleError(err)
+	}
+
+	for rows.Next() {
+		err = rows.StructScan(entity)
+		if err != nil {
+			return db.HandleError(err)
+		}
+	}
+	return db.HandleError(err)
+}
