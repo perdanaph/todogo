@@ -56,3 +56,16 @@ func (r Repository) Create(ctx context.Context, entity *model.ToDo) error {
 	}
 	return db.HandleError(err)
 }
+
+func (r Repository) Update(ctx context.Context, entity model.ToDo) error {
+	query := `UPDATE todo
+                SET name = :name, 
+                    description = :description, 
+                    status = :status, 
+                    created_on = :created_on, 
+                    updated_on = :updated_on, 
+                    deleted_on = :deleted_on
+                WHERE id = :id;`
+	_, err := r.Db.NamedExecContext(ctx, query, entity)
+	return db.HandleError(err)
+}
