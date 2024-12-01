@@ -16,4 +16,6 @@ func Register(r *mux.Router, lg *logrus.Logger, db *sqlx.DB) {
 	apiRouter.HandleFunc("/todo", handler.Create()).Methods(http.MethodPost)
 	apiRouter.HandleFunc("/todos", handler.GetAllTodos()).Methods(http.MethodGet)
 	apiRouter.HandleFunc("/todo/{id}", handler.FindById()).Methods(http.MethodGet)
+	apiRouter.HandleFunc("/todo/{id}", handler.Update()).Methods(http.MethodPut)
+	apiRouter.HandleFunc("/todo/{id}", handler.Delete()).Methods(http.MethodDelete)
 }

@@ -69,3 +69,12 @@ func (r Repository) Update(ctx context.Context, entity model.ToDo) error {
 	_, err := r.Db.NamedExecContext(ctx, query, entity)
 	return db.HandleError(err)
 }
+
+func (r Repository) Delete(ctx context.Context, id int) error {
+	query := `DELETE FROM todo WHERE id = $1`
+	_, err := r.Db.ExecContext(ctx, query, id)
+	if err != nil {
+		return db.HandleError(err)
+	}
+	return nil
+}
